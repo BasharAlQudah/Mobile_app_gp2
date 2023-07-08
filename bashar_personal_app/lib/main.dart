@@ -11,7 +11,16 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       home: Scaffold(
         backgroundColor: Colors.teal,
-        body: Container(),
+        body: SafeArea(
+          child: Container(
+            height: 100,
+            width: 100,
+            margin: EdgeInsets.fromLTRB(10, 80, 3, 421),
+            padding: EdgeInsets.all(10),
+            color: Colors.white,
+            child: Text('hello world'),
+          ),
+        ),
       ),
     );
   }
