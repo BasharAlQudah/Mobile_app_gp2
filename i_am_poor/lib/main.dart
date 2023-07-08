@@ -5,10 +5,10 @@ void main() {
     MaterialApp(
       debugShowCheckedModeBanner: false,
       home: Scaffold(
-        backgroundColor: Colors.grey[600],
+        backgroundColor: Colors.blueGrey[600],
         appBar: AppBar(
           title: const Text("I don't have any money"),
-          backgroundColor: Colors.blueGrey[900],
+          backgroundColor: Colors.grey[900],
           centerTitle: true,
         ),
         body: const Center(
