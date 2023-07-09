@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 
-void main() => runApp(const MyApp());
+void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -9,13 +8,12 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      debugShowCheckedModeBanner: false,
       home: Scaffold(
         backgroundColor: Colors.blueGrey,
         body: SafeArea(
           child: Center(
             child: Column(
-              // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              // crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 const SizedBox(height: 50),
                 const CircleAvatar(
@@ -30,17 +28,61 @@ class MyApp extends StatelessWidget {
                     fontSize: 40,
                     color: Colors.white,
                     fontWeight: FontWeight.bold,
+                    letterSpacing: 2.5,
                   ),
                 ),
-                Text(
+                const Text(
                   'FLUTTER DEVELOPER',
-                  style: GoogleFonts.tienne(
-                    textStyle: const TextStyle(
-                      fontSize: 15,
-                      color: Colors.white,
-                      fontStyle: FontStyle.italic,
+                  style: TextStyle(
+                    fontFamily: 'Tienne',
+                    fontSize: 15,
+                    color: Colors.white,
+                    fontStyle: FontStyle.italic,
+                    fontWeight: FontWeight.bold,
+                    letterSpacing: 2.5,
+                  ),
+                ),
+                SizedBox(
+                  height: 10,
+                  child: Divider(
+                    thickness: 1,
+                    color: Colors.blueGrey.shade200,
+                    indent: 40,
+                    endIndent: 40.0,
+                  ),
+                ),
+                Card(
+                  margin: EdgeInsets.symmetric(vertical: 10, horizontal: 25),
+                  child: ListTile(
+                    leading: Icon(
+                      Icons.phone,
+                      color: Colors.blueGrey.shade300,
                     ),
-                  ), //Google fonts
+                    title: Text(
+                      '+962 9720 85 82',
+                      style: TextStyle(
+                        color: Colors.blueGrey.shade300,
+                        fontSize: 15,
+                      ),
+                    ),
+                  ),
+                ),
+                Card(
+                  // padding: EdgeInsets.all(10),
+                  margin: EdgeInsets.symmetric(vertical: 10, horizontal: 25),
+                  child: ListTile(
+                    leading: Icon(
+                      Icons.mail,
+                      color: Colors.blueGrey.shade300,
+                    ),
+                    title: Text(
+                      'BasharQudah69@gmail.com',
+                      style: TextStyle(
+                        color: Colors.blueGrey.shade300,
+                        fontSize: 15,
+                      ),
+                    ),
+                  ),
                 ),
               ], //Children
             ),
