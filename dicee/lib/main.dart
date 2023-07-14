@@ -25,13 +25,26 @@ void main() {
   ));
 }
 
-class Dicee extends StatelessWidget {
-  Dicee({super.key});
+class Dicee extends StatefulWidget {
+  const Dicee({super.key});
+
+  @override
+  State<Dicee> createState() => _DiceeState();
+}
+
+class _DiceeState extends State<Dicee> {
+  int leftDiceNumber = 1;
+  int rightDiceNumber = 1;
   @override
   Widget build(BuildContext context) {
     Random(DateTime.now().hour);
-    var leftDiceNumber = 1;
-    var rightDiceNumber = 1;
+    void randomize() {
+      setState(() {
+        leftDiceNumber = Random().nextInt(6) + 1;
+        rightDiceNumber = Random().nextInt(6) + 1;
+      });
+    }
+
     return Center(
       child: Row(
         children: [
@@ -40,7 +53,7 @@ class Dicee extends StatelessWidget {
               padding: const EdgeInsets.all(8.0),
               child: TextButton(
                 onPressed: () {
-                  leftDiceNumber = Random().nextInt(6) + 1;
+                  randomize();
                   print('$leftDiceNumber'); //3shan a6ab3 3ala console
                 },
                 child: Image.asset("images/dice$leftDiceNumber.png"),
@@ -52,7 +65,7 @@ class Dicee extends StatelessWidget {
               padding: const EdgeInsets.all(8.0),
               child: TextButton(
                 onPressed: () {
-                  rightDiceNumber = Random().nextInt(6) + 1;
+                  randomize();
                   print("$rightDiceNumber"); //3shan a6ab3 3ala console
                 },
                 child: Image.asset('images/dice$rightDiceNumber.png'),
