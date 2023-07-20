@@ -1,9 +1,9 @@
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 
-void main() {
-  runApp(xylophone());
-}
+void main() => runApp(
+      xylophone(),
+    );
 
 class xylophone extends StatefulWidget {
   xylophone({super.key});
@@ -13,8 +13,9 @@ class xylophone extends StatefulWidget {
 }
 
 class _xylophoneState extends State<xylophone> {
-  void setSound({int i = 0}) {
+  void PlaySound({int i = 0}) {
     final Player = AudioPlayer();
+
     Player.play(AssetSource('note$i.wav'));
   }
 
@@ -28,18 +29,16 @@ class _xylophoneState extends State<xylophone> {
     Colors.purple
   ];
 
-  Expanded BuildKey(int i) {
-    return Expanded(
-      child: TextButton(
-        onPressed: () {
-          setSound(i: i + 1);
-          print('clicked $i');
-        },
-        style: TextButton.styleFrom(backgroundColor: color[i]),
-        child: const Text(''),
-      ),
-    );
-  }
+  Expanded BuildKey(int i) => Expanded(
+        child: TextButton(
+          onPressed: () {
+            PlaySound(i: i + 1);
+            print('clicked $i');
+          },
+          style: TextButton.styleFrom(backgroundColor: color[i]),
+          child: Center(child: const Text('')),
+        ),
+      );
 
   @override
   Widget build(BuildContext context) {
@@ -58,52 +57,3 @@ class _xylophoneState extends State<xylophone> {
     );
   }
 }
-
-//
-// Padding(
-// padding: const EdgeInsets.all(0.0),
-// child: Column(
-// mainAxisSize: MainAxisSize.max,
-// crossAxisAlignment: CrossAxisAlignment.stretch,
-// children: [
-// Expanded(
-// flex: 1,
-// child: Container(
-// child: Center(
-// child: Text(
-// 'hello world',
-// style: TextStyle(
-// color: Colors.black,
-// ),
-// ),
-// ),
-// color: Colors.blue,
-// ),
-// ),
-// Expanded(
-// flex: 1,
-// child: Container(
-// color: Colors.red,
-// ),
-// ),
-// Expanded(
-// flex: 1,
-// child: Container(
-// color: Colors.green,
-// ),
-// ),
-// Expanded(
-// flex: 1,
-// child: Container(
-// color: Colors.yellow,
-// ),
-// ),
-// Expanded(
-// flex: 1,
-// child: Container(
-// color: Colors.purple,
-// ),
-// ),
-// ],
-// ),
-// )
