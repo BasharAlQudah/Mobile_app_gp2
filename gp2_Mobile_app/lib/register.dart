@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:gp2_mobile_app/auth/auth.dart';
 
 class MyRegister extends StatefulWidget {
   const MyRegister({Key? key}) : super(key: key);
@@ -8,6 +9,21 @@ class MyRegister extends StatefulWidget {
 }
 
 class _MyRegisterState extends State<MyRegister> {
+  TextEditingController name = TextEditingController();
+  TextEditingController email = TextEditingController();
+  TextEditingController password = TextEditingController();
+
+  bool isDoctor = false;
+  final _signUpFormKey = GlobalKey<FormState>();
+
+  @override
+  void dispose() {
+    super.dispose();
+    name.dispose();
+    email.dispose();
+    password.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -39,108 +55,172 @@ class _MyRegisterState extends State<MyRegister> {
                   const SizedBox(
                     height: 30,
                   ),
-                  Container(
-                    padding: EdgeInsets.only(
-                        right: 35,
-                        left: 35,
-                        top: MediaQuery.of(context).size.height * 0.27),
-                    child: Column(children: [
-                      TextField(
-                        decoration: InputDecoration(
-                          focusedBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10),
-                            borderSide: const BorderSide(color: Colors.black),
-                          ),
-                          enabledBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10),
-                            borderSide: const BorderSide(color: Colors.white),
-                          ),
-                          hintText: 'Name',
-                          hintStyle: const TextStyle(color: Colors.white),
-                        ),
-                      ),
-                      const SizedBox(
-                        height: 30,
-                      ),
-                      TextField(
-                        decoration: InputDecoration(
-                          focusedBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10),
-                            borderSide: const BorderSide(color: Colors.black),
-                          ),
-                          enabledBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10),
-                            borderSide: const BorderSide(color: Colors.white),
-                          ),
-                          hintText: 'Email',
-                          hintStyle: const TextStyle(color: Colors.white),
-                        ),
-                      ),
-                      const SizedBox(
-                        height: 30,
-                      ),
-                      TextField(
-                        obscureText: true,
-                        decoration: InputDecoration(
-                          focusedBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10),
-                            borderSide: const BorderSide(color: Colors.black),
-                          ),
-                          enabledBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10),
-                            borderSide: const BorderSide(color: Colors.white),
-                          ),
-                          hintText: 'Password',
-                          hintStyle: const TextStyle(color: Colors.white),
-                        ),
-                      ),
-                      const SizedBox(
-                        height: 40,
-                      ),
-                      Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            const Text(
-                              'Sign In',
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 27,
-                                fontWeight: FontWeight.w700,
-                              ),
+                  Form(
+                    autovalidateMode: AutovalidateMode.onUserInteraction,
+                    key: _signUpFormKey,
+                    child: Container(
+                      padding: EdgeInsets.only(
+                          right: 35,
+                          left: 35,
+                          top: MediaQuery.of(context).size.height * 0.27),
+                      child: Column(children: [
+                        TextFormField(
+                          controller: name,
+                          validator: (value) {
+                            if (value!.isEmpty) {
+                              return "Can't be empty";
+                            }
+                            return null;
+                          },
+                          decoration: InputDecoration(
+                            focusedBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10),
+                              borderSide: const BorderSide(color: Colors.black),
                             ),
-                            CircleAvatar(
-                              radius: 30,
-                              backgroundColor: const Color(0xff4c505b),
-                              child: IconButton(
-                                color: Colors.white,
-                                onPressed: () {
-                                  Navigator.pushNamed(context, 'homepage');
-                                },
-                                icon: const Icon(Icons.arrow_forward),
-                              ),
+                            enabledBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10),
+                              borderSide: const BorderSide(color: Colors.white),
                             ),
-                          ]),
-                      const SizedBox(
-                        height: 40,
-                      ),
-                      Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            hintText: 'Name',
+                            hintStyle: const TextStyle(color: Colors.white),
+                          ),
+                        ),
+                        const SizedBox(
+                          height: 30,
+                        ),
+                        TextFormField(
+                          controller: email,
+                          validator: (value) {
+                            if (value!.isEmpty ||
+                                !RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}')
+                                    .hasMatch(value)) {
+                              return 'Invalid email';
+                            }
+                            return null;
+                          },
+                          decoration: InputDecoration(
+                            focusedBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10),
+                              borderSide: const BorderSide(color: Colors.black),
+                            ),
+                            enabledBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10),
+                              borderSide: const BorderSide(color: Colors.white),
+                            ),
+                            hintText: 'Email',
+                            hintStyle: const TextStyle(color: Colors.white),
+                          ),
+                        ),
+                        const SizedBox(
+                          height: 30,
+                        ),
+                        TextFormField(
+                          controller: password,
+                          validator: (value) {
+                            if (value!.isEmpty || value.length < 6) {
+                              return "At least 6 characters";
+                            }
+                            return null;
+                          },
+                          obscureText: true,
+                          decoration: InputDecoration(
+                            focusedBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10),
+                              borderSide: const BorderSide(color: Colors.black),
+                            ),
+                            enabledBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10),
+                              borderSide: const BorderSide(color: Colors.white),
+                            ),
+                            hintText: 'Password',
+                            hintStyle: const TextStyle(color: Colors.white),
+                          ),
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            TextButton(
-                              onPressed: () {
-                                Navigator.pushNamed(context, 'login');
+                            Checkbox(
+                              value: isDoctor,
+                              onChanged: (newValue) {
+                                setState(() {
+                                  isDoctor = newValue ?? false;
+                                });
                               },
-                              child: const Text(
-                                'Login',
+                            ),
+                            const SizedBox(height: 16),
+                            Text(
+                              isDoctor ? 'Sign in as a Doctor' : 'Doctor',
+                              style: const TextStyle(fontSize: 18),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(
+                          height: 40,
+                        ),
+                        Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              const Text(
+                                'Sign In',
                                 style: TextStyle(
-                                  decoration: TextDecoration.underline,
-                                  fontSize: 18,
                                   color: Colors.white,
+                                  fontSize: 27,
+                                  fontWeight: FontWeight.w700,
                                 ),
                               ),
-                            ),
-                          ]),
-                    ]),
+                              CircleAvatar(
+                                radius: 30,
+                                backgroundColor: const Color(0xff4c505b),
+                                child: IconButton(
+                                  color: Colors.white,
+                                  onPressed: () {
+                                    if (_signUpFormKey.currentState!
+                                        .validate()) {
+                                      if (isDoctor) {
+                                        AuthMethods().signUpDoctor(
+                                          email: email.text,
+                                          name: name.text,
+                                          password: password.text,
+                                          context: context,
+                                        );
+                                      } else {
+                                        AuthMethods().signUpUser(
+                                          name: name.text,
+                                          email: email.text,
+                                          password: password.text,
+                                          context: context,
+                                        );
+                                      }
+                                      print('object');
+                                    }
+                                    // Navigator.pushNamed(context, 'homepage');
+                                  },
+                                  icon: const Icon(Icons.arrow_forward),
+                                ),
+                              ),
+                            ]),
+                        const SizedBox(
+                          height: 40,
+                        ),
+                        Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              TextButton(
+                                onPressed: () {
+                                  Navigator.pushNamed(context, 'login');
+                                },
+                                child: const Text(
+                                  'Login',
+                                  style: TextStyle(
+                                    decoration: TextDecoration.underline,
+                                    fontSize: 18,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              ),
+                            ]),
+                      ]),
+                    ),
                   ),
                 ],
               ),
