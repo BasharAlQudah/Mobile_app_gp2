@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module type="JAVA_MODULE" version="4">
+  <component name="NewModuleRootManager" inherit-compiler-output="true">
+    <exclude-output />
+    <content url="file://$MODULE_DIR$">
+      <excludeFolder url="file://$MODULE_DIR$/challenge_3/.dart_tool" />
+      <excludeFolder url="file://$MODULE_DIR$/challenge_3/build" />
+      <excludeFolder url="file://$MODULE_DIR$/challenge_3/.pub" />
+      <excludeFolder url="file://$MODULE_DIR$/magic_8_ball/.dart_tool" />
+      <excludeFolder url="file://$MODULE_DIR$/magic_8_ball/.pub" />
+      <excludeFolder url="file://$MODULE_DIR$/magic_8_ball/build" />
+      <excludeFolder url="file://$MODULE_DIR$/xylophone/.dart_tool" />
+      <excludeFolder url="file://$MODULE_DIR$/xylophone/build" />
+      <excludeFolder url="file://$MODULE_DIR$/xylophone/.pub" />
+      <excludeFolder url="file://$MODULE_DIR$/i_am_poor/.dart_tool" />
+      <excludeFolder url="file://$MODULE_DIR$/i_am_poor/.pub" />
+      <excludeFolder url="file://$MODULE_DIR$/i_am_poor/build" />
+      <excludeFolder url="file://$MODULE_DIR$/challenge_2/build" />
+      <excludeFolder url="file://$MODULE_DIR$/challenge_2/.dart_tool" />
+      <excludeFolder url="file://$MODULE_DIR$/challenge_2/.pub" />
+      <excludeFolder url="file://$MODULE_DIR$/gp2_Mobile_app/build" />
+      <excludeFolder url="file://$MODULE_DIR$/gp2_Mobile_app/.pub" />
+      <excludeFolder url="file://$MODULE_DIR$/gp2_Mobile_app/.dart_tool" />
+      <excludeFolder url="file://$MODULE_DIR$/app 1/.pub" />
+      <excludeFolder url="file://$MODULE_DIR$/app 1/build" />
+      <excludeFolder url="file://$MODULE_DIR$/app 1/.dart_tool" />
+      <excludeFolder url="file://$MODULE_DIR$/i_am_rich/build" />
+      <excludeFolder url="file://$MODULE_DIR$/i_am_rich/.pub" />
+      <excludeFolder url="file://$MODULE_DIR$/i_am_rich/.dart_tool" />
+      <excludeFolder url="file://$MODULE_DIR$/quzzler/.dart_tool" />
+      <excludeFolder url="file://$MODULE_DIR$/quzzler/build" />
+      <excludeFolder url="file://$MODULE_DIR$/quzzler/.pub" />
+      <excludeFolder url="file://$MODULE_DIR$/bashar_personal_app/.dart_tool" />
+      <excludeFolder url="file://$MODULE_DIR$/bashar_personal_app/.pub" />
+      <excludeFolder url="file://$MODULE_DIR$/bashar_personal_app/build" />
+      <excludeFolder url="file://$MODULE_DIR$/dicee/.pub" />
+      <excludeFolder url="file://$MODULE_DIR$/dicee/build" />
+      <excludeFolder url="file://$MODULE_DIR$/dicee/.dart_tool" />
+    </content>
+    <orderEntry type="inheritedJdk" />
+    <orderEntry type="sourceFolder" forTests="false" />
+  </component>
+</module>
