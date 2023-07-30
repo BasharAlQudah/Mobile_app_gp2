@@ -1,8 +1,9 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import '../models/user.dart' as model;
+
 import '../models/doctor.dart' as doctor;
+import '../models/user.dart' as model;
 
 class AuthMethods {
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -46,7 +47,7 @@ class AuthMethods {
     return res;
   }
 
-// sign up company/client
+// sign up Doctor
   Future<String> signUpDoctor({
     required String email,
     required String name,
@@ -56,13 +57,11 @@ class AuthMethods {
     String res = 'Some error occured';
     try {
       if (email.isNotEmpty || password.isNotEmpty || name.isNotEmpty) {
-        // register client
+        // register Doctor
         UserCredential cred = await _auth.createUserWithEmailAndPassword(
             email: email, password: password);
 
-        // Create the "table" collection inside the client's document
-
-        // add client to the database
+        // add Doctor to the database
         doctor.Doctor doctorRole = doctor.Doctor(
           email: email,
           name: name,
@@ -88,7 +87,6 @@ class AuthMethods {
     return res;
   }
 
-  //logging in user
   //logging in user
   Future<String> loginUser({
     required BuildContext context,
@@ -118,19 +116,10 @@ class AuthMethods {
     return res;
   }
 
-  // void signOutUser(BuildContext context) async {
-  //   await FirebaseAuth.instance.signOut();
-
-  //  Navigator.pushReplacementNamed(context, 'homepage');
-  // }
-
   Future passwordReset(
       {required String email, required BuildContext context}) async {
     try {
       await FirebaseAuth.instance.sendPasswordResetEmail(email: email);
-
-      // displaySuccessMotionToast(
-      //     context, 'Password reset link sent!', 'Check your email');
     } on FirebaseAuthException catch (e) {
       print(e.toString());
       if (e.toString() ==

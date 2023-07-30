@@ -1,4 +1,7 @@
 import 'dart:io';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -22,6 +25,55 @@ class _HomePageState extends State<HomePage> {
         _image = File(pickedFile.path);
       });
     }
+  }
+
+  Future<void> _uploadImageToFirebase() async {
+    if (_image == null) return;
+
+    try {
+      String fileName =
+          DateTime.now().millisecondsSinceEpoch.toString() + ".jpg";
+      firebase_storage.Reference ref =
+          firebase_storage.FirebaseStorage.instance.ref().child(fileName);
+
+      firebase_storage.UploadTask uploadTask = ref.putFile(_image!);
+      firebase_storage.TaskSnapshot taskSnapshot =
+          await uploadTask.whenComplete(() => null);
+
+      String imageUrl = await taskSnapshot.ref.getDownloadURL();
+      String description = _textEditingController.text;
+
+      await saveImageToFirestore(imageUrl, description);
+
+      _textEditingController.clear();
+      setState(() {
+        _image = null;
+      });
+
+      print("Image uploaded. URL: $imageUrl");
+      print("Description: $description");
+    } catch (e) {
+      print("Error uploading image: $e");
+    }
+  }
+
+  Future<void> saveImageToFirestore(String imageUrl, String description) async {
+    try {
+      FirebaseFirestore firestore = FirebaseFirestore.instance;
+
+      await firestore.collection('images').add({
+        'imageUrl': imageUrl,
+        'description': description,
+        'timestamp': FieldValue.serverTimestamp(),
+      });
+
+      print("Image URL and description saved to Firestore.");
+    } catch (e) {
+      print("Error saving image URL and description: $e");
+    }
+    setState(() {
+      _image = null;
+    });
   }
 
   @override
@@ -92,6 +144,15 @@ class _HomePageState extends State<HomePage> {
                         ),
                       ),
                     ),
+                    ElevatedButton(
+                      onPressed: () async {
+                        Navigator.of(context).pop();
+                        await _uploadImageToFirebase();
+                      },
+                      child: const Expanded(
+                        child: Text('Upload image'),
+                      ),
+                    )
                   ],
                 ),
               ],
@@ -102,56 +163,3 @@ class _HomePageState extends State<HomePage> {
     );
   }
 }
-
-/*class HomePage extends StatefulWidget {
-  @override
-  _HomePageState createState() => _HomePageState();
-}
-
-class _HomePageState extends State<HomePage> {
-  File? _imageFile;
-  final picker = ImagePicker();
-
-  Future _getImage() async {
-    final pickedFile = await picker.pickImage(source: ImageSource.gallery);
-
-    setState(() {
-      if (pickedFile != null) {
-        _imageFile = File(pickedFile.path);
-      }
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      child: Scaffold(
-        appBar: AppBar(
-          title: Text('Image Upload and Text Form'),
-        ),
-        body: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Center(
-              child: _imageFile == null
-                  ? Text('No image selected.')
-                  : Image.file(_imageFile!),
-            ),
-            ElevatedButton(
-              onPressed: _getImage,
-              child: Text('Upload Image'),
-            ),
-            Padding(
-              padding: EdgeInsets.all(20.0),
-              child: TextFormField(
-                decoration: InputDecoration(
-                  labelText: 'Enter some text',
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}*/
