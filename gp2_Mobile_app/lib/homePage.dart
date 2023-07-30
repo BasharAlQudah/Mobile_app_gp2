@@ -71,9 +71,6 @@ class _HomePageState extends State<HomePage> {
     } catch (e) {
       print("Error saving image URL and description: $e");
     }
-    setState(() {
-      _image = null;
-    });
   }
 
   @override
@@ -134,25 +131,40 @@ class _HomePageState extends State<HomePage> {
                       child: const Expanded(child: Text("Select Image")),
                     ),
                     Expanded(
-                      child: TextField(
-                        focusNode: null,
-                        autofocus: false,
-                        controller: _textEditingController,
-                        decoration: const InputDecoration(
-                          labelText: "Disease Description ",
-                          border: OutlineInputBorder(),
-                        ),
+                      child: Column(
+                        children: [
+                          TextField(
+                            focusNode: null,
+                            autofocus: false,
+                            controller: _textEditingController,
+                            decoration: const InputDecoration(
+                              labelText: "Disease Description ",
+                              border: OutlineInputBorder(),
+                            ),
+                          ),
+                          Expanded(
+                            child: TextFormField(
+                              enabled: false,
+                              decoration: const InputDecoration(
+                                labelText: "Disease Name ",
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                     ElevatedButton(
                       onPressed: () async {
                         Navigator.of(context).pop();
                         await _uploadImageToFirebase();
+                        setState(() {
+                          _image = null;
+                        });
                       },
                       child: const Expanded(
                         child: Text('Upload image'),
                       ),
-                    )
+                    ),
                   ],
                 ),
               ],
