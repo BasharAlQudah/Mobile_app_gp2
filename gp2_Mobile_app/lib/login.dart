@@ -78,8 +78,12 @@ class _MyLoginState extends State<MyLogin> {
                   ),
                   TextFormField(
                     validator: (value) {
-                      if (value!.isEmpty || value.length < 6) {
-                        return "At least 6 characters";
+                      if (value!.isEmpty || value.length < 8) {
+                        return "Enter a Password";
+                      } else if (!RegExp(
+                              r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{8,}$')
+                          .hasMatch(value)) {
+                        return "Enter a Valid Password";
                       }
                       return null;
                     },
