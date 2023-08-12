@@ -155,11 +155,11 @@ class _HomePageState extends State<HomePage> {
                     ),
                     ElevatedButton(
                       onPressed: () async {
-                        Navigator.of(context).pop();
+                        //Navigator.of(context).pop();
                         await _uploadImageToFirebase();
-                        setState(() {
-                          _image = null;
-                        });
+                        // setState(() {
+                        //   _image = null;
+                        // });
                       },
                       child: const Expanded(
                         child: Text('Upload image'),
