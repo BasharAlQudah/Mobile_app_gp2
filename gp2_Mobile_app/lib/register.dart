@@ -159,7 +159,7 @@ class _MyRegisterState extends State<MyRegister> {
                           ],
                         ),
                         const SizedBox(
-                          height: 40,
+                          height: 10,
                         ),
                         Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,

@@ -130,34 +130,32 @@ class _MyLoginState extends State<MyLogin> {
                   const SizedBox(
                     height: 40,
                   ),
-                  Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        TextButton(
-                          onPressed: () {
-                            Navigator.pushNamed(context, 'register');
-                          },
-                          child: const Text(
-                            'Sign Up',
-                            style: TextStyle(
-                              decoration: TextDecoration.underline,
-                              fontSize: 18,
-                              color: Color(0xff4c505b),
-                            ),
-                          ),
+                  Row(mainAxisAlignment: MainAxisAlignment.start, children: [
+                    TextButton(
+                      onPressed: () {
+                        Navigator.pushNamed(context, 'register');
+                      },
+                      child: const Text(
+                        'Sign Up',
+                        style: TextStyle(
+                          decoration: TextDecoration.underline,
+                          fontSize: 20,
+                          color: Color(0xff4c505b),
                         ),
-                        TextButton(
-                          onPressed: () {},
-                          child: const Text(
-                            'Forgot Password',
-                            style: TextStyle(
-                              decoration: TextDecoration.underline,
-                              fontSize: 18,
-                              color: Color(0xff4c505b),
-                            ),
-                          ),
-                        ),
-                      ]),
+                      ),
+                    ),
+                    // TextButton(
+                    //   onPressed: () {},
+                    //   child: const Text(
+                    //     '',
+                    //     style: TextStyle(
+                    //       decoration: TextDecoration.underline,
+                    //       fontSize: 18,
+                    //       color: Color(0xff4c505b),
+                    //     ),
+                    //   ),
+                    // ),
+                  ]),
                 ]),
               ),
             ),
