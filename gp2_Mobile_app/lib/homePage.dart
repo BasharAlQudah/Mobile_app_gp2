@@ -14,6 +14,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   File? _image;
+  String latestDetectionValue = '';
   final picker = ImagePicker();
   final TextEditingController _textEditingController = TextEditingController();
 
@@ -25,6 +26,51 @@ class _HomePageState extends State<HomePage> {
         _image = File(pickedFile.path);
       });
     }
+  }
+
+  Future<void> fetchLatestDetection() async {
+    try {
+      FirebaseFirestore firestore = FirebaseFirestore.instance;
+
+      QuerySnapshot querySnapshot = await firestore
+          .collection('images')
+          .orderBy('timestamp', descending: true)
+          .limit(1)
+          .get();
+
+      if (querySnapshot.docs.isNotEmpty) {
+        DocumentSnapshot latestDocument = querySnapshot.docs.first;
+        // String latestDescription = latestDocument['description'];
+        String latestDetection = latestDocument['detaction'];
+
+        // Update the UI with the latest detection data
+        // _textEditingController.text = latestDescription;
+        // Since TextFormField is disabled, we'll use another text widget to display the detection
+        setState(() {
+          latestDetectionValue = latestDetection;
+        });
+        print(latestDetectionValue);
+      } else {
+        print("No detections found.");
+      }
+    } catch (e) {
+      print("Error fetching latest detection: $e");
+    }
+  }
+
+  // @override
+  // void initState() {
+  //   super.initState();
+  //   fetchLatestDetection();
+  // }
+
+  Stream<DocumentSnapshot> getLatestDetectionStream() {
+    return FirebaseFirestore.instance
+        .collection('images')
+        .orderBy('timestamp', descending: true)
+        .limit(1)
+        .snapshots()
+        .map((querySnapshot) => querySnapshot.docs.first);
   }
 
   Future<void> _uploadImageToFirebase() async {
@@ -65,6 +111,7 @@ class _HomePageState extends State<HomePage> {
         'imageUrl': imageUrl,
         'description': description,
         'timestamp': FieldValue.serverTimestamp(),
+        'detaction': ''
       });
 
       print("Image URL and description saved to Firestore.");
@@ -82,92 +129,115 @@ class _HomePageState extends State<HomePage> {
       ),
       child: SafeArea(
         child: Scaffold(
+          resizeToAvoidBottomInset: false, // Add this line
+
           backgroundColor: Colors.transparent,
           body: Padding(
             padding: const EdgeInsets.all(50.0),
-            child: Stack(
-              children: [
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
+            child: StreamBuilder<DocumentSnapshot>(
+              stream: getLatestDetectionStream(),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return CircularProgressIndicator();
+                } else if (snapshot.hasError) {
+                  return Text("Error: ${snapshot.error}");
+                } else if (!snapshot.hasData || !snapshot.data!.exists) {
+                  return Text("No detections found.");
+                }
+
+                DocumentSnapshot latestDocument = snapshot.data!;
+                Map<String, dynamic>? documentData =
+                    latestDocument.data() as Map<String, dynamic>?;
+                if (documentData != null &&
+                    documentData.containsKey('detaction')) {
+                  String latestDetection = documentData['detaction'];
+                  // Rest of your code...
+                } else {
+                  String defaultDetection = "Detection not available";
+                }
+                String? latestDetection = latestDocument['detaction'];
+                return Stack(
                   children: [
-                    _image != null
-                        ? CircleAvatar(
-                            radius:
-                                100, // Change the radius to adjust the size of the circle
-                            backgroundImage: FileImage(_image!),
-                          )
-                        : const SizedBox(
-                            height: 200,
-                            width: 200,
-                            child: CircleAvatar(
-                              backgroundColor: Colors.white,
-                            ),
-                          ),
-                    ElevatedButton(
-                      onPressed: () {
-                        showDialog(
-                          context: context,
-                          builder: (BuildContext context) => AlertDialog(
-                            title: const Text("Choose an option"),
-                            actions: <Widget>[
-                              TextButton(
-                                child: const Text("Upload from gallery"),
-                                onPressed: () {
-                                  getImage(ImageSource.gallery);
-                                  Navigator.of(context).pop();
-                                },
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        _image != null
+                            ? CircleAvatar(
+                                radius:
+                                    100, // Change the radius to adjust the size of the circle
+                                backgroundImage: FileImage(_image!),
+                              )
+                            : const SizedBox(
+                                height: 200,
+                                width: 200,
+                                child: CircleAvatar(
+                                  backgroundColor: Colors.white,
+                                ),
                               ),
-                              TextButton(
-                                child: const Text("Take a photo"),
-                                onPressed: () {
-                                  getImage(ImageSource.camera);
-                                  Navigator.of(context).pop();
-                                },
+                        ElevatedButton(
+                          onPressed: () {
+                            showDialog(
+                              context: context,
+                              builder: (BuildContext context) => AlertDialog(
+                                title: const Text("Choose an option"),
+                                actions: <Widget>[
+                                  TextButton(
+                                    child: const Text("Upload from gallery"),
+                                    onPressed: () {
+                                      getImage(ImageSource.gallery);
+                                      Navigator.of(context).pop();
+                                    },
+                                  ),
+                                  TextButton(
+                                    child: const Text("Take a photo"),
+                                    onPressed: () {
+                                      getImage(ImageSource.camera);
+                                      Navigator.of(context).pop();
+                                    },
+                                  ),
+                                ],
+                              ),
+                            );
+                          },
+                          child: const Text("Select Image"),
+                        ),
+                        Expanded(
+                          child: Column(
+                            children: [
+                              TextField(
+                                focusNode: null,
+                                autofocus: false,
+                                controller: _textEditingController,
+                                decoration: const InputDecoration(
+                                  labelText: "Disease Description ",
+                                  border: OutlineInputBorder(),
+                                ),
+                              ),
+                              TextFormField(
+                                enabled: false,
+                                decoration: InputDecoration(
+                                  labelText:
+                                      "Disease Name: ${latestDetection ?? ''}",
+                                ),
                               ),
                             ],
                           ),
-                        );
-                      },
-                      child: const Expanded(child: Text("Select Image")),
-                    ),
-                    Expanded(
-                      child: Column(
-                        children: [
-                          TextField(
-                            focusNode: null,
-                            autofocus: false,
-                            controller: _textEditingController,
-                            decoration: const InputDecoration(
-                              labelText: "Disease Description ",
-                              border: OutlineInputBorder(),
-                            ),
-                          ),
-                          Expanded(
-                            child: TextFormField(
-                              enabled: false,
-                              decoration: const InputDecoration(
-                                labelText: "Disease Name ",
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    ElevatedButton(
-                      onPressed: () async {
-                        //Navigator.of(context).pop();
-                        await _uploadImageToFirebase();
-                        // setState(() {
-                        //   _image = null;
-                        // });
-                      },
-                      child: const Expanded(
-                        child: Text('Upload image'),
-                      ),
+                        ),
+                        ElevatedButton(
+                          onPressed: () async {
+                            //Navigator.of(context).pop();
+                            await _uploadImageToFirebase();
+                            // setState(() {
+                            //   _image = null;
+                            // });
+                          },
+                          child: const Text('Upload image'),
+                        ),
+                      ],
                     ),
                   ],
-                ),
-              ],
+                );
+              },
             ),
           ),
         ),

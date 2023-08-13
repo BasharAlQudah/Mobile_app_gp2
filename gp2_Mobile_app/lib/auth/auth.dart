@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -96,20 +98,18 @@ class AuthMethods {
     String res = 'Some error occured';
 
     try {
-      if (email.isNotEmpty || password.isNotEmpty) {
+      if (email.isNotEmpty && password.isNotEmpty) {
         UserCredential userCredential = await _auth.signInWithEmailAndPassword(
             email: email, password: password);
         User user = userCredential.user!;
+        Navigator.pushReplacementNamed(context, 'homepage');
 
         res = 'Success';
       } else {
         res = 'Please enter all the fields';
       }
-      Navigator.pushReplacementNamed(context, 'homepage');
     } on FirebaseAuthException catch (e) {
-      if (e.code == 'user-not-found') {
-        res = 'No user found';
-      }
+      res = e.toString();
     } catch (e) {
       res = e.toString();
     }

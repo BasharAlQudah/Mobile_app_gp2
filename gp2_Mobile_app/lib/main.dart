@@ -4,6 +4,8 @@ import 'package:gp2_mobile_app/homePage.dart';
 import 'package:gp2_mobile_app/login.dart';
 import 'package:gp2_mobile_app/register.dart';
 
+GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();

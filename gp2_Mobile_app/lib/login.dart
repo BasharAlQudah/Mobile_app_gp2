@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gp2_mobile_app/auth/auth.dart';
+import 'package:gp2_mobile_app/shared/components.dart';
 
 class MyLogin extends StatefulWidget {
   const MyLogin({Key? key}) : super(key: key);
@@ -9,15 +10,83 @@ class MyLogin extends StatefulWidget {
 }
 
 class _MyLoginState extends State<MyLogin> {
+  bool _isLoading = false;
   TextEditingController email = TextEditingController();
   TextEditingController password = TextEditingController();
   AuthMethods authMethods = AuthMethods();
+  bool _showPassword = false;
+
   Future<void> signInUser() async {
-    await authMethods.loginUser(
+    print('In');
+    setState(() {
+      _isLoading = true;
+    });
+    String res = await authMethods.loginUser(
       context: context,
       email: email.text,
       password: password.text,
     );
+    print(res);
+    if (res == 'Success') {
+      print(res);
+      setState(() {
+        _isLoading = false;
+      });
+    } else if (res ==
+        '[firebase_auth/wrong-password] The password is invalid or the user does not have a password.') {
+      print(res);
+
+      setState(() {
+        _isLoading = false;
+      });
+
+      final snackBar = SnackBar(
+        content: Text(res),
+      );
+      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+
+      // displayErrorMotionToast(
+      // context, 'Wrong password', 'Make sure your credentials are right');
+    } else if (res == 'No user found') {
+      print(res);
+      setState(() {
+        _isLoading = false;
+      });
+      final snackBar = SnackBar(
+        content: Text(res),
+      );
+      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+      // displayErrorMotionToast(
+      //     context, res, 'Make sure your credentials are right');
+    } else if (res == 'Some error occured') {
+      print(res);
+      setState(() {
+        _isLoading = false;
+      });
+      final snackBar = SnackBar(
+        content: Text(res),
+      );
+      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+      // displayWarningMotionToast(
+      // context, res, 'Make sure your credentials are right');
+    } else if (res ==
+        '[firebase_auth/user-not-found] There is no user record corresponding to this identifier. The user may have been deleted.') {
+      setState(() {
+        _isLoading = false;
+        const snackBar = SnackBar(
+          content: Text('No user found'),
+        );
+        ScaffoldMessenger.of(context).showSnackBar(snackBar);
+      });
+    } else {
+      setState(() {
+        _isLoading = false;
+        final snackBar = SnackBar(
+          content: Text(res),
+        );
+        ScaffoldMessenger.of(context).showSnackBar(snackBar);
+      });
+    }
   }
 
   final _formKey = GlobalKey<FormState>();
@@ -56,6 +125,7 @@ class _MyLoginState extends State<MyLogin> {
                     top: MediaQuery.of(context).size.height * 0.5),
                 child: Column(children: [
                   TextFormField(
+                    controller: email,
                     validator: (value) {
                       if (value!.isEmpty ||
                           !RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}')
@@ -77,6 +147,7 @@ class _MyLoginState extends State<MyLogin> {
                     height: 30,
                   ),
                   TextFormField(
+                    controller: password,
                     validator: (value) {
                       if (value!.isEmpty || value.length < 8) {
                         return "Enter a Password";
@@ -87,8 +158,19 @@ class _MyLoginState extends State<MyLogin> {
                       }
                       return null;
                     },
-                    obscureText: true,
+                    obscureText: !_showPassword,
+                    keyboardType: TextInputType.visiblePassword,
                     decoration: InputDecoration(
+                      suffixIcon: IconButton(
+                        icon: Icon(
+                          Icons.remove_red_eye,
+                          size: 30,
+                          color: _showPassword ? Colors.black : Colors.grey,
+                        ),
+                        onPressed: () {
+                          setState(() => _showPassword = !_showPassword);
+                        },
+                      ),
                       fillColor: Colors.grey.shade100,
                       filled: true,
                       hintText: 'Password',
@@ -111,20 +193,21 @@ class _MyLoginState extends State<MyLogin> {
                           fontWeight: FontWeight.w700,
                         ),
                       ),
-                      CircleAvatar(
-                        radius: 30,
-                        backgroundColor: const Color(0xff4c505b),
-                        child: IconButton(
-                          color: Colors.white,
-                          onPressed: () {
-                            if (_formKey.currentState!.validate()) {
-                              signInUser().then((value) =>
-                                  Navigator.pushNamed(context, 'homepage'));
-                            }
-                          },
-                          icon: const Icon(Icons.arrow_forward),
-                        ),
-                      ),
+                      _isLoading
+                          ? const CircularProgressIndicator()
+                          : CircleAvatar(
+                              radius: 30,
+                              backgroundColor: const Color(0xff4c505b),
+                              child: IconButton(
+                                color: Colors.white,
+                                onPressed: () {
+                                  if (_formKey.currentState!.validate()) {
+                                    signInUser();
+                                  }
+                                },
+                                icon: const Icon(Icons.arrow_forward),
+                              ),
+                            ),
                     ],
                   ),
                   const SizedBox(
