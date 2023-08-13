@@ -217,7 +217,8 @@ class _HomePageState extends State<HomePage> {
                                 enabled: false,
                                 decoration: InputDecoration(
                                   labelText:
-                                      "Disease Name: ${latestDetection ?? ''}",
+                                      "${latestDetection ?? ''}",
+                                  labelStyle: const TextStyle(color: Colors.white)
                                 ),
                               ),
                             ],
